@@ -1,9 +1,10 @@
-name = “elua-wedding”
-pages_build_output_dir = “.”
-compatibility_date = “2026-10-10”
+
+name = "elua-wedding"
+pages_build_output_dir = "."
+compatibility_date = "2026-10-10"
 
 [[d1_databases]]
-binding = “DB”
-database_name = “elua-wedding-db”
-database_id = “505a36a9-0f5e-4891-9b55-50e375e89e07”
-migrations_dir = “migrations”
+binding = "DB"
+database_name = "elua-wedding-db"
+database_id = "505a36a9-0f5e-4891-9b55-50e375e89e07"
+migrations_dir = "migrations"
