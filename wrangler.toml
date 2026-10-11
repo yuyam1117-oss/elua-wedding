@@ -5,7 +5,7 @@ compatibility_date = "2026-10-10"
 [[d1_databases]]
 binding = "DB"
 database_name = "elua-wedding-db"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "505a36a9-0f5e-4891-9b55-50e375e89e07"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
