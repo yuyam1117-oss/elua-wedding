@@ -1,0 +1,1 @@
+export async function onRequestGet({env}) { if(!env.DB)return Response.json({notices:[]}); const {results=[]}=await env.DB.prepare("SELECT id,title,body,published_at FROM notices WHERE is_published=1 AND date(published_at)<=date('now') ORDER BY published_at DESC,id DESC LIMIT 20").all(); return Response.json({notices:results}); }

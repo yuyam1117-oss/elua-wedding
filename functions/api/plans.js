@@ -1,0 +1,1 @@
+export async function onRequestGet({env}) { if(!env.DB)return Response.json({plans:[]}); const {results=[]}=await env.DB.prepare('SELECT id,sort_order,title,category,description,price,image_url FROM plans WHERE is_published=1 ORDER BY sort_order,id').all(); return Response.json({plans:results}); }

@@ -1,0 +1,74 @@
+/* Elua Wedding - shared responsive rules
+   Keep page-specific styling in site.css/admin.css and responsive overrides here. */
+:root {
+  --layout-gutter: clamp(16px, 5vw, 72px);
+  --responsive-focus: #7f8b76;
+}
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { min-width: 320px; }
+img, video, iframe, canvas, svg { max-width: 100%; }
+img, video { height: auto; }
+button, input, select, textarea { max-width: 100%; font: inherit; }
+input, select, textarea { min-width: 0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--responsive-focus); outline-offset: 3px; }
+
+/* Prevent long text, URLs and user-provided content from widening layouts. */
+.hero-copy, .section, .panel, .record, .record-main, .contact-copy,
+.contact-form, .form-grid, .form-grid label, .plan-card, .gallery-item,
+.notice-item, .inquiry { min-width: 0; overflow-wrap: anywhere; }
+
+/* Tablet and smaller laptop layouts. */
+@media (max-width: 900px) {
+  .hero { padding-left: var(--layout-gutter); padding-right: var(--layout-gutter); }
+  .section { padding-left: var(--layout-gutter); padding-right: var(--layout-gutter); }
+  .footer { padding-left: var(--layout-gutter); padding-right: var(--layout-gutter); }
+  .nav { gap: clamp(10px, 1.8vw, 20px); }
+  .contact { gap: 28px; }
+  .values, .plan-grid { gap: 16px; }
+  .wrap { width: 100%; }
+}
+
+/* Phones: touch-friendly controls and single-column content. */
+@media (max-width: 760px) {
+  .header { position: sticky; }
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-copy, .hero-art { min-width: 0; }
+  .values, .plan-grid, .contact { grid-template-columns: minmax(0, 1fr); }
+  .contact-form input, .contact-form select, .contact-form textarea,
+  .form-grid input:not([type="checkbox"]), .form-grid textarea,
+  .form-grid select, #login-form input { min-height: 44px; }
+  .contact-form textarea, .form-grid textarea { min-height: 110px; }
+  .button, button, .button-link { min-height: 44px; }
+  .form-actions button { flex: 1 1 100%; }
+  .record { max-width: 100%; }
+  .record-actions { display: flex; flex-wrap: wrap; }
+  .record-actions button { min-width: 0; }
+  .admin-nav button { min-height: 44px; white-space: normal; }
+  .notice-item { grid-template-columns: minmax(0, 1fr); }
+  .notice-item p { grid-column: 1; }
+}
+
+/* Very narrow phones. */
+@media (max-width: 390px) {
+  .header { padding-left: 14px; padding-right: 14px; }
+  .brand { font-size: 17px; }
+  .hero { padding-left: 16px; padding-right: 16px; }
+  .section { padding: 52px 16px; }
+  .footer { padding: 26px 16px; }
+  .wrap { padding: 12px; }
+  .panel { padding: 20px 14px; margin: 18px 0; }
+  .panel h1 { font-size: clamp(21px, 6vw, 24px); }
+  .admin-nav { grid-template-columns: minmax(0, 1fr); }
+  .record-actions button { flex: 1 1 100%; }
+  .flow-list article { grid-template-columns: 1fr; gap: 4px; }
+  .flow-list article > span { padding-top: 0; }
+}
+
+/* Landscape phones: avoid oversized vertical gaps. */
+@media (max-width: 760px) and (orientation: landscape) {
+  .hero { padding-top: 28px; padding-bottom: 34px; }
+  .hero-art { height: min(55vw, 300px); }
+  .section { padding-top: 48px; padding-bottom: 48px; }
+}

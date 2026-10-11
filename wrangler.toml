@@ -1,0 +1,13 @@
+name = "elua-wedding"
+pages_build_output_dir = "."
+compatibility_date = "2026-10-10"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elua-wedding-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "elua-wedding-media"
