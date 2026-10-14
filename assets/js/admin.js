@@ -38,6 +38,8 @@ function setActiveTab(tabName) {
   document.dispatchEvent(new CustomEvent('admin:tab-change', { detail: { tab: tabName } }));
   if (tabName === 'home') refreshDashboard();
 }
+$('#toggle-password').addEventListener('click', () => { const field = $('#password'); const show = field.type === 'password'; field.type = show ? 'text' : 'password'; $('#toggle-password').setAttribute('aria-pressed', String(show)); $('#toggle-password').setAttribute('aria-label', show ? 'パスワードを隠す' : 'パスワードを表示'); $('#toggle-password').textContent = show ? '◉' : '◎'; });
+
 $('#login-form').addEventListener('submit', async e => {
   e.preventDefault(); password = $('#password').value; setStatus('#login-status', '確認しています…');
   if (isLocalPreview) {
@@ -50,31 +52,45 @@ $('#login-form').addEventListener('submit', async e => {
 $('#admin-nav').addEventListener('click', e => { const btn = e.target.closest('[data-tab]'); if (btn) setActiveTab(btn.dataset.tab); });
 $$('[data-go]').forEach(btn => btn.addEventListener('click', () => { setActiveTab(btn.dataset.go); if (btn.dataset.new) openNew(btn.dataset.new); }));
 
+// Image uploads are converted to data URLs for small assets; Cloudflare D1 stores the value with the record.
+$$('input[type="file"][data-image-target]').forEach(fileInput => fileInput.addEventListener('change', async () => {
+  const file = fileInput.files?.[0]; if (!file) return;
+  const form = fileInput.closest('form'); const target = form?.elements[fileInput.dataset.imageTarget];
+  if (!target) return;
+  if (!/^image\/(jpeg|png|webp|gif)$/.test(file.type)) { alert('JPEG、PNG、WebP、GIF画像を選んでください。'); fileInput.value = ''; return; }
+  if (file.size > 650 * 1024) { alert('画像は650KB以下にしてください。画像を圧縮してから再度選択してください。'); fileInput.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => { target.value = String(reader.result || ''); setStatus($('.status', form) || '#settings-load-status', '画像を読み込みました。設定を保存してください。', 'success'); };
+  reader.onerror = () => alert('画像を読み込めませんでした。');
+  reader.readAsDataURL(file);
+}));
+
 // Site settings: each card submits only its own fields, so unrelated settings are never overwritten.
 const settingForms = $$('.settings-form');
 async function loadSettings() {
   if (isLocalPreview) { setStatus('#settings-load-status', 'ローカルプレビュー：API接続がないため、保存済みデータは読み込めません。'); return; }
   try {
     const { content = {} } = await api('/api/admin/content');
-    settingForms.forEach(form => $$('input[name],textarea[name]', form).forEach(field => { field.value = content[field.name] ?? ''; }));
+    settingForms.forEach(form => $$('input[name],textarea[name]', form).forEach(field => { if (field.type === 'checkbox') field.checked = String(content[field.name] ?? 'true') !== 'false'; else field.value = content[field.name] ?? ''; }));
     setStatus('#settings-load-status', '保存済みの設定を読み込みました。');
   } catch (err) { setStatus('#settings-load-status', err.message, 'error'); }
 }
 settingForms.forEach(form => form.addEventListener('submit', async e => {
   e.preventDefault(); const button = $('button[type="submit"]', form); const statusEl = $('.status', form); button.disabled = true; setStatus(statusEl, '保存しています…');
-  const content = {}; $$('input[name],textarea[name]', form).forEach(field => { content[field.name] = field.value.trim(); });
+  const content = {}; $$('input[name],textarea[name]', form).forEach(field => { content[field.name] = field.type === 'checkbox' ? String(field.checked) : field.value.trim(); });
   try { await api('/api/admin/content', { method: 'PUT', body: JSON.stringify({ content }) }); setStatus(statusEl, '保存しました。公開サイトに反映されました。', 'success'); }
   catch (err) { setStatus(statusEl, err.message, 'error'); }
   finally { button.disabled = false; }
 }));
 
+function isVideoUrl(value) { return /(?:youtube\.com\/(?:watch|embed)|youtu\.be\/|vimeo\.com\/)/i.test(value || ''); }
 function renderRecords(boxSelector, items, config) {
   const box = $(boxSelector); box.replaceChildren();
   if (!items.length) { escText(box, 'p', config.empty, 'empty-state'); return; }
   items.forEach(item => {
     const card = document.createElement('article'); card.className = 'record'; const main = document.createElement('div'); main.className = 'record-main';
     escText(main, 'strong', config.title(item)); escText(main, 'p', config.subtitle(item));
-    if (item.image_url) { const img = document.createElement('img'); img.src = item.image_url; img.alt = item.title || ''; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; img.className = 'record-thumb'; img.onerror = () => { img.hidden = true; }; main.prepend(img); }
+    if (item.image_url && !isVideoUrl(item.image_url)) { const img = document.createElement('img'); img.src = item.image_url; img.alt = item.title || ''; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; img.className = 'record-thumb'; img.onerror = () => { img.hidden = true; }; main.prepend(img); } else if (item.image_url && isVideoUrl(item.image_url)) { escText(main, 'span', '▶ 動画', 'record-video-label'); }
     const actions = document.createElement('div'); actions.className = 'record-actions';
     const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'secondary'; edit.textContent = '編集'; edit.addEventListener('click', () => config.edit(item));
     const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'danger'; remove.textContent = '削除'; remove.addEventListener('click', () => config.remove(item));
