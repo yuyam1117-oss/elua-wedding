@@ -15,7 +15,7 @@
     <header class="header">
         <a class="brand" href="/" aria-label="Elua Wedding ホーム">
             <span class="brand-mark">E</span>
-            <span>Elua <b>Wedding</b></span>
+            <span id="site-brand-name">Elua <b>Wedding</b></span>
         </a>
 
         <button class="menu-toggle" aria-label="メニュー" aria-expanded="false">☰</button>
@@ -187,6 +187,7 @@
                 </p>
 
                 <p class="contact-small">送信後、担当者よりご連絡いたします。</p>
+                <div id="contact-details" class="contact-details" hidden></div>
             </div>
 
             <form id="contact-form" class="contact-form">
@@ -251,8 +252,8 @@
         </a>
 
         <p id="footer-text">ふたりらしい、あたたかなウェディングを。</p>
-
-        <small>© <span id="year"></span> Elua Wedding</small>
+        <nav class="footer-social" id="footer-social" aria-label="公式SNS" hidden></nav>
+        <small>© <span id="year"></span> <span id="footer-site-name">Elua Wedding</span></small>
     </footer>
 
     <script src="/assets/js/site.js" defer></script>

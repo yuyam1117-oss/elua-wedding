@@ -1,166 +1,34 @@
-
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Elua Wedding | 管理画面</title>
-<link rel="stylesheet" href="/assets/css/admin.css">
-<link rel="stylesheet" href="/assets/css/admin-layout.css">
-<link rel="stylesheet" href="/assets/css/style.css">
-</head>
-<body>
-<main class="wrap">
-<header>
-<a href="/" class="brand">Elua <b>Wedding</b></a>
-<span>CONTENT MANAGER</span>
-</header>
-
-<section id="login-panel" class="panel">
-<p class="eyebrow">ADMIN LOGIN</p>
-<h1>管理画面にログイン</h1>
-<p>CloudflareのSecret <code>ADMIN_PASSWORD</code> に設定したパスワードを入力してください。</p>
-<form id="login-form">
-<label>管理パスワード<input type="password" id="password" required autocomplete="current-password"></label>
-<button>ログイン</button>
-<p id="login-status" class="status" role="status"></p>
-</form>
-</section>
-
-<section id="editor-panel" hidden>
-<div class="admin-layout" id="admin-layout">
-  <button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="メニューを閉じる" tabindex="-1"></button>
-  <aside class="admin-sidebar" id="admin-sidebar" aria-label="管理サイドメニュー">
-    <a href="/" class="sidebar-brand">Elua <b>Wedding</b></a>
-    <p class="sidebar-caption">CONTENT MANAGER</p>
-    <div class="sidebar-section-label">MENU</div>
-    <nav class="admin-nav" id="admin-nav" aria-label="管理メニュー">
-<button class="active" data-tab="settings">サイト設定</button>
-<button data-tab="plans">プラン・料金</button>
-<button data-tab="notices">お知らせ</button>
-<button data-tab="gallery">写真ギャラリー</button>
-<button data-tab="inquiries">お問い合わせ</button>
-</nav>
-    <div class="sidebar-footer">Elua Wedding<br><span>管理画面</span></div>
-  </aside>
-  <div class="admin-main-column">
-    <div class="mobile-topbar">
-      <button type="button" class="menu-toggle" id="menu-toggle" aria-controls="admin-sidebar" aria-expanded="false" aria-label="管理メニューを開く"><span></span><span></span><span></span></button>
-      <span>Elua <b>Wedding</b></span>
-      <span class="mobile-topbar-label">CMS</span>
-    </div>
-    <section id="editor-panel" hidden>
-<div class="editor-head panel">
-<div>
-<p class="eyebrow">ELUA WEDDING CMS</p>
-<h1>サイト管理</h1>
-<p>保存すると公開サイトに反映されます。</p>
-</div>
-<button id="logout" class="secondary">ログアウト</button>
-</div>
-
-
-
-<section class="panel admin-tab" id="tab-settings">
-<p class="eyebrow">SITE CONTENT</p>
-<h2>サイト設定・文章</h2>
-<form id="content-form" class="form-grid">
-<label>サイト名<input name="site_name" maxlength="100" required></label>
-<label>トップ見出し<input name="hero_title" maxlength="160" required></label>
-<label class="wide">トップ説明<textarea name="hero_text" rows="3" maxlength="2000" required></textarea></label>
-<label>トップ画像URL<input name="hero_image_url" type="url" placeholder="https://..."></label>
-<label>コンセプト見出し<input name="concept_title" maxlength="160" required></label>
-<label class="wide">コンセプト説明<textarea name="concept_text" rows="4" maxlength="3000" required></textarea></label>
-<label>お問い合わせ見出し<input name="contact_title" maxlength="160" required></label>
-<label class="wide">お問い合わせ案内文<textarea name="contact_text" rows="3" maxlength="2000"></textarea></label>
-<label>通知先メールアドレス<input name="contact_email" type="email" maxlength="200" placeholder="you@example.com"><small>メール送信にはResend APIキーと認証済み送信元も必要です。</small></label>
-<label>電話番号<input name="phone" maxlength="100"></label>
-<label>住所・所在地<input name="address" maxlength="300"></label>
-<label>Instagram URL<input name="instagram_url" type="url" placeholder="https://..."></label>
-<label>LINE URL<input name="line_url" type="url" placeholder="https://..."></label>
-<label class="wide">フッター文言<input name="footer_text" maxlength="300"></label>
-<div class="wide">
-<button type="submit">設定を保存</button>
-<p id="save-status" class="status" role="status"></p>
-</div>
-</form>
-</section>
-
-<section class="panel admin-tab" id="tab-plans" hidden>
-<p class="eyebrow">PLANS & PRICING</p>
-<h2>プラン・料金管理</h2>
-<form id="plan-form" class="form-grid">
-<input type="hidden" name="id">
-<label>プラン名<input name="title" maxlength="160" required></label>
-<label>カテゴリ<input name="category" maxlength="80" placeholder="INTIMATE"></label>
-<label class="wide">説明<textarea name="description" rows="3" maxlength="2000" required></textarea></label>
-<label>料金表示<input name="price" maxlength="120" placeholder="30万円〜 / 要相談"></label>
-<label>画像URL<input name="image_url" type="url" placeholder="https://..."></label>
-<label>表示順<input name="sort_order" type="number" min="0" max="9999" value="10"></label>
-<label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label>
-<div class="wide form-actions">
-<button type="submit">プランを保存</button>
-<button type="button" id="plan-cancel" class="secondary">新規入力に戻す</button>
-<p id="plan-status" class="status" role="status"></p>
-</div>
-</form>
-<div id="plans-list" class="record-list"></div>
-</section>
-
-<section class="panel admin-tab" id="tab-notices" hidden>
-<p class="eyebrow">NEWS & UPDATES</p>
-<h2>お知らせ管理</h2>
-<form id="notice-form" class="form-grid">
-<input type="hidden" name="id">
-<label class="wide">タイトル<input name="title" maxlength="160" required></label>
-<label class="wide">本文<textarea name="body" rows="5" maxlength="5000" required></textarea></label>
-<label>公開日<input name="published_at" type="date" required></label>
-<label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label>
-<div class="wide form-actions">
-<button type="submit">お知らせを保存</button>
-<button type="button" id="notice-cancel" class="secondary">新規入力に戻す</button>
-<p id="notice-status" class="status" role="status"></p>
-</div>
-</form>
-<div id="notices-list" class="record-list"></div>
-</section>
-
-<section class="panel admin-tab" id="tab-gallery" hidden>
-<p class="eyebrow">PHOTO GALLERY</p>
-<h2>写真ギャラリー管理</h2>
-<p>公開画像のHTTPS URLを登録します。直接アップロードではなく、画像ホスティング等に置いた画像URLを指定してください。</p>
-<form id="gallery-form" class="form-grid">
-<input type="hidden" name="id">
-<label>写真タイトル<input name="title" maxlength="160"></label>
-<label>カテゴリ<input name="category" maxlength="80" value="WEDDING"></label>
-<label class="wide">画像URL（HTTPSで始まる公開画像URL）<input name="image_url" type="url" required placeholder="https://example.com/your-photo.jpg"><small>無料運用では直接アップロードを使わず、公開画像のHTTPS URLを登録してください。</small></label>
-<label class="wide">説明<textarea name="description" rows="2" maxlength="1000"></textarea></label>
-<label>表示順<input name="sort_order" type="number" min="0" max="9999" value="10"></label>
-<label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label>
-<div class="wide form-actions">
-<button type="submit">写真を保存</button>
-<button type="button" id="gallery-cancel" class="secondary">新規入力に戻す</button>
-<p id="gallery-status" class="status" role="status"></p>
-</div>
-</form>
-<div id="gallery-list" class="record-list gallery-admin-list"></div>
-</section>
-
-<section class="panel admin-tab" id="tab-inquiries" hidden>
-<p class="eyebrow">CONTACT MESSAGES</p>
-<h2>お問い合わせ一覧</h2>
-<button id="refresh-inquiries" class="secondary">一覧を更新</button>
-<div id="inquiries" class="record-list"><p>読み込み中…</p></div>
-</section>
-</section>
-
-  </div>
-</div>
-</section>
-<footer>Elua Wedding · 管理画面</footer>
-</main>
-<script src="/admin/layout/main.js" defer></script>
-<script src="/assets/js/admin.js" defer></script>
-</body>
-</html>
+<link rel="stylesheet" href="/assets/css/admin.css"><link rel="stylesheet" href="/assets/css/admin-layout.css"><link rel="stylesheet" href="/assets/css/style.css">
+</head><body><main class="wrap">
+<header><a href="/" class="brand">Elua <b>Wedding</b></a><span>CONTENT MANAGER</span></header>
+<section id="login-panel" class="panel login-panel"><p class="eyebrow">ADMIN LOGIN</p><h1>管理画面にログイン</h1><p>CloudflareのSecret <code>ADMIN_PASSWORD</code> に設定したパスワードを入力してください。</p><form id="login-form"><label>管理パスワード<input type="password" id="password" required autocomplete="current-password"></label><button>ログイン</button><p id="login-status" class="status" role="status"></p></form></section>
+<section id="editor-panel" hidden><div class="admin-layout" id="admin-layout">
+<button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="メニューを閉じる" tabindex="-1"></button>
+<aside class="admin-sidebar" id="admin-sidebar" aria-label="管理サイドメニュー"><a href="/" class="sidebar-brand">Elua <b>Wedding</b></a><p class="sidebar-caption">CONTENT MANAGER</p><div class="sidebar-section-label">MENU</div>
+<nav class="admin-nav" id="admin-nav" aria-label="管理メニュー">
+<button class="active" data-tab="home">HOME</button><button data-tab="settings">サイト設定</button><button data-tab="plans">プラン・料金</button><button data-tab="notices">お知らせ</button><button data-tab="gallery">写真ギャラリー</button><button data-tab="inquiries">お問い合わせ</button>
+</nav><div class="sidebar-footer">Elua Wedding<br><span>管理画面</span></div></aside>
+<div class="admin-main-column"><div class="mobile-topbar"><button type="button" class="menu-toggle" id="menu-toggle" aria-controls="admin-sidebar" aria-expanded="false" aria-label="管理メニューを開く"><span></span><span></span><span></span></button><span>Elua <b>Wedding</b></span><span class="mobile-topbar-label">CMS</span></div>
+<div class="admin-content"><div class="editor-head panel"><div><p class="eyebrow">ELUA WEDDING CMS</p><h1>サイト管理</h1><p>ここで保存した内容は公開サイトに反映されます。</p></div><div class="editor-head-actions"><a class="button-link" href="/" target="_blank" rel="noopener">HPを見る ↗</a><button id="logout" class="secondary">ログアウト</button></div></div>
+<section class="panel admin-tab dashboard" id="tab-home"><div class="section-title-row"><div><p class="eyebrow">DASHBOARD</p><h2>HOME</h2><p>サイトの更新状況をひと目で確認できます。</p></div><a class="button-link" href="/" target="_blank" rel="noopener">HPを見る ↗</a></div>
+<div class="dashboard-stats" id="dashboard-stats"><article><span>公開プラン</span><strong id="stat-plans">—</strong></article><article><span>公開中のお知らせ</span><strong id="stat-notices">—</strong></article><article><span>登録写真</span><strong id="stat-gallery">—</strong></article><article><span>未対応確認用・お問い合わせ</span><strong id="stat-inquiries">—</strong></article></div>
+<div class="dashboard-columns"><section class="dashboard-card"><p class="eyebrow">QUICK ACTIONS</p><h3>クイックアクション</h3><div class="quick-actions"><button type="button" data-go="settings">サイト設定を編集</button><button type="button" data-go="plans" data-new="plan">プランを新規登録</button><button type="button" data-go="notices" data-new="notice">お知らせを新規登録</button><button type="button" data-go="gallery" data-new="gallery">写真を新規登録</button><button type="button" data-go="inquiries">お問い合わせを確認</button></div></section><section class="dashboard-card"><p class="eyebrow">LATEST NEWS</p><h3>最新のお知らせ</h3><div id="latest-notices" class="latest-notices"><p>読み込み中…</p></div><button type="button" class="secondary" data-go="notices">お知らせ一覧を見る</button></section></div><p id="dashboard-status" class="status" role="status"></p></section>
+<section class="panel admin-tab" id="tab-settings" hidden><p class="eyebrow">SITE SETTINGS</p><h2>サイト設定</h2><p>各カードごとに個別で保存できます。別のカードの設定は変更されません。</p>
+<div class="settings-grid">
+<form class="settings-card settings-form" data-keys="site_name,footer_text"><div class="settings-card-head"><span class="settings-icon">01</span><div><h3>基本設定</h3><p>サイト名・フッター</p></div></div><label>サイト名<input name="site_name" maxlength="100" required></label><label>フッター文言<input name="footer_text" maxlength="300"></label><div class="settings-actions"><button type="submit">この設定を保存</button><p class="status" role="status"></p></div></form>
+<form class="settings-card settings-form" data-keys="hero_title,hero_text,hero_image_url"><div class="settings-card-head"><span class="settings-icon">02</span><div><h3>ヒーローセクション設定</h3><p>トップページのメインビジュアル</p></div></div><label>メインタイトル<input name="hero_title" maxlength="160" required></label><label>キャッチコピー・説明文<textarea name="hero_text" rows="4" maxlength="2000" required></textarea></label><label>トップ画像URL<input name="hero_image_url" type="url" placeholder="https://..."></label><div class="settings-actions"><button type="submit">この設定を保存</button><p class="status" role="status"></p></div></form>
+<form class="settings-card settings-form" data-keys="concept_title,concept_text"><div class="settings-card-head"><span class="settings-icon">03</span><div><h3>コンセプト設定</h3><p>コンセプト欄の見出し・文章</p></div></div><label>見出し<input name="concept_title" maxlength="160" required></label><label>説明文<textarea name="concept_text" rows="4" maxlength="3000" required></textarea></label><div class="settings-actions"><button type="submit">この設定を保存</button><p class="status" role="status"></p></div></form>
+<form class="settings-card settings-form" data-keys="instagram_url,youtube_url,line_url"><div class="settings-card-head"><span class="settings-icon">04</span><div><h3>SNS設定</h3><p>公式SNSのリンク先</p></div></div><label>Instagram URL<input name="instagram_url" type="url" placeholder="https://www.instagram.com/..."></label><label>YouTube URL<input name="youtube_url" type="url" placeholder="https://www.youtube.com/..."></label><label>LINE URL<input name="line_url" type="url" placeholder="https://line.me/..."></label><div class="settings-actions"><button type="submit">この設定を保存</button><p class="status" role="status"></p></div></form>
+<form class="settings-card settings-form" data-keys="contact_title,contact_text,contact_email,phone,address"><div class="settings-card-head"><span class="settings-icon">05</span><div><h3>お問い合わせ設定</h3><p>案内文・連絡先</p></div></div><label>見出し<input name="contact_title" maxlength="160" required></label><label>案内文<textarea name="contact_text" rows="3" maxlength="2000"></textarea></label><label>通知先メールアドレス<input name="contact_email" type="email" maxlength="200" placeholder="you@example.com"><small>メール通知にはResend APIキーと認証済み送信元が必要です。</small></label><label>電話番号<input name="phone" maxlength="100"></label><label>住所・所在地<input name="address" maxlength="300"></label><div class="settings-actions"><button type="submit">この設定を保存</button><p class="status" role="status"></p></div></form>
+</div><p id="settings-load-status" class="status" role="status"></p></section>
+<section class="panel admin-tab" id="tab-plans" hidden><div class="section-title-row"><div><p class="eyebrow">PLANS & PRICING</p><h2>プラン・料金</h2><p>登録済みプランを確認・編集できます。</p></div><button type="button" id="plan-new">＋ 新規登録</button></div><div id="plans-list" class="record-list"></div><form id="plan-form" class="form-grid editor-form" hidden><h3 class="wide form-heading" id="plan-form-title">プランを新規登録</h3><input type="hidden" name="id"><label>プラン名<input name="title" maxlength="160" required></label><label>カテゴリ<input name="category" maxlength="80" placeholder="INTIMATE"></label><label class="wide">説明<textarea name="description" rows="3" maxlength="2000" required></textarea></label><label>料金表示<input name="price" maxlength="120" placeholder="30万円〜 / 要相談"></label><label>画像URL<input name="image_url" type="url" placeholder="https://..."></label><label>表示順<input name="sort_order" type="number" min="0" max="9999" value="10"></label><label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label><div class="wide form-actions"><button type="submit">保存する</button><button type="button" id="plan-cancel" class="secondary">一覧に戻る</button><p id="plan-status" class="status" role="status"></p></div></form></section>
+<section class="panel admin-tab" id="tab-notices" hidden><div class="section-title-row"><div><p class="eyebrow">NEWS & UPDATES</p><h2>お知らせ</h2><p>登録済みのお知らせを確認・編集できます。</p></div><button type="button" id="notice-new">＋ 新規登録</button></div><div id="notices-list" class="record-list"></div><form id="notice-form" class="form-grid editor-form" hidden><h3 class="wide form-heading" id="notice-form-title">お知らせを新規登録</h3><input type="hidden" name="id"><label class="wide">タイトル<input name="title" maxlength="160" required></label><label class="wide">本文<textarea name="body" rows="5" maxlength="5000" required></textarea></label><label>公開日<input name="published_at" type="date" required></label><label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label><div class="wide form-actions"><button type="submit">保存する</button><button type="button" id="notice-cancel" class="secondary">一覧に戻る</button><p id="notice-status" class="status" role="status"></p></div></form></section>
+<section class="panel admin-tab" id="tab-gallery" hidden><div class="section-title-row"><div><p class="eyebrow">PHOTO GALLERY</p><h2>写真ギャラリー</h2><p>公開画像のHTTPS URLを登録・管理できます。</p></div><button type="button" id="gallery-new">＋ 新規登録</button></div><div id="gallery-list" class="record-list gallery-admin-list"></div><form id="gallery-form" class="form-grid editor-form" hidden><h3 class="wide form-heading" id="gallery-form-title">写真を新規登録</h3><input type="hidden" name="id"><label>写真タイトル<input name="title" maxlength="160"></label><label>カテゴリ<input name="category" maxlength="80" value="WEDDING"></label><label class="wide">画像URL（HTTPSで始まる公開画像URL）<input name="image_url" type="url" required placeholder="https://example.com/your-photo.jpg"><small>公開画像のHTTPS URLを指定してください。</small></label><label class="wide">説明<textarea name="description" rows="2" maxlength="1000"></textarea></label><label>表示順<input name="sort_order" type="number" min="0" max="9999" value="10"></label><label class="check-label"><input name="is_published" type="checkbox" checked> 公開する</label><div class="wide form-actions"><button type="submit">保存する</button><button type="button" id="gallery-cancel" class="secondary">一覧に戻る</button><p id="gallery-status" class="status" role="status"></p></div></form></section>
+<section class="panel admin-tab" id="tab-inquiries" hidden><div class="section-title-row"><div><p class="eyebrow">CONTACT MESSAGES</p><h2>お問い合わせ</h2><p>サイトから届いたお問い合わせを確認できます。</p></div><button id="refresh-inquiries" class="secondary">一覧を更新</button></div><div id="inquiries" class="record-list"><p>読み込み中…</p></div></section>
+</div></div></div></section><footer>Elua Wedding · 管理画面</footer></main>
+<script src="/admin/layout/main.js" defer></script><script src="/assets/js/admin.js" defer></script></body></html>
